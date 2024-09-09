@@ -1,0 +1,19 @@
+.task-area {
+    display: flex;
+    justify-content: space-between;
+}
+
+.task-column {
+    width: 22%;
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.task-column h2 {
+    text-align: center;
+    background-color: #f2f2f2;
+    padding: 10px 0;
+    margin: 0 0 10px 0;
+    border-radius: 4px;
+}
