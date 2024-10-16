@@ -22,17 +22,20 @@
         <section class="task-area" id="task-area">
             <div class="task-column" id="backlog-column">
                 <h2>Бэклог</h2>
+                <!-- Задачи в бэклоге -->
                 <div class="task" draggable="true">Выучить JS</div>
                 <div class="task" draggable="true">Выучить React</div>
                 <div class="task" draggable="true">Сделать домашку</div>
             </div>
             <div class="task-column" id="in-progress-column">
                 <h2>В процессе</h2>
+                <!-- Задачи в процессе -->
                 <div class="task" draggable="true">Вымыть посуду</div>
                 <div class="task" draggable="true">Полить воды</div>
             </div>
             <div class="task-column" id="done-column">
                 <h2>Готово</h2>
+                <!-- Готовые задачи -->
                 <div class="task" draggable="true">Позвонить маме</div>
                 <div class="task" draggable="true">Покормить кота</div>
             </div>
@@ -95,17 +98,19 @@
                 });
             }
 
-            // Разрешаем сброс задач в колонку Корзина
-            trashColumn.addEventListener('dragover', function(event) {
-                event.preventDefault();  // Нужно для того, чтобы позволить сбрасывать элемент
-            });
+            // Разрешаем сброс задач в любую колонку
+            const columns = document.querySelectorAll('.task-column');
+            columns.forEach(column => {
+                column.addEventListener('dragover', function(event) {
+                    event.preventDefault();  // Нужно для того, чтобы позволить сбрасывать элемент
+                });
 
-            // Обрабатываем сброс задачи в колонку "Корзина"
-            trashColumn.addEventListener('drop', function(event) {
-                event.preventDefault();
-                if (draggedTask) {
-                    trashColumn.appendChild(draggedTask); // Добавляем задачу в корзину
-                }
+                column.addEventListener('drop', function(event) {
+                    event.preventDefault();
+                    if (draggedTask) {
+                        column.appendChild(draggedTask); // Добавляем задачу в колонку
+                    }
+                });
             });
 
             // Очистка задач только в колонке "Корзина"
