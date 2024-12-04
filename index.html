@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гарайшина Камилла Тимуровна</title>
+    <link rel="stylesheet" href="styles/common_styles.css">
+    <link rel="stylesheet" href="styles/style_for_adding_a_task.css">
+    <link rel="stylesheet" href="styles/style_for_a_task.css">
+    <link rel="stylesheet" href="styles/style_for_the_task_area.css">
+    <link rel="stylesheet" href="styles/style_for_the_clear_button.css">
+</head>
+<body>
+    <div class="todo-container">
+        <header class="todo-header">
+            <h1>Список задач</h1>
+        </header>
+        <section class="add-task">
+            <input type="text" id="task-input" placeholder="Название задачи...">
+            <button id="add-task-btn">+ Добавить</button>
+        </section>
+        <section class="task-area" id="task-area">
+            <div class="task-column" id="backlog-column">
+                <h2>Бэклог</h2>
+                <!-- Задачи в бэклоге -->
+                <div class="task" draggable="true">Выучить JS</div>
+                <div class="task" draggable="true">Выучить React</div>
+                <div class="task" draggable="true">Сделать домашку</div>
+            </div>
+            <div class="task-column" id="in-progress-column">
+                <h2>В процессе</h2>
+                <!-- Задачи в процессе -->
+                <div class="task" draggable="true">Вымыть посуду</div>
+                <div class="task" draggable="true">Полить воды</div>
+            </div>
+            <div class="task-column" id="done-column">
+                <h2>Готово</h2>
+                <!-- Готовые задачи -->
+                <div class="task" draggable="true">Позвонить маме</div>
+                <div class="task" draggable="true">Покормить кота</div>
+            </div>
+            <div class="task-column" id="trash-column">
+                <h2>Корзина</h2>
+                <!-- Задачи будут перемещаться сюда -->
+            </div>
+        </section>
+        <section class="clear-button">
+            <button id="clear-tasks-btn">Очистить</button>
+        </section>
+    </div>
+
+    <!-- Встраиваемый JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addTaskBtn = document.getElementById('add-task-btn');
+            const clearTasksBtn = document.getElementById('clear-tasks-btn');
+            const taskInput = document.getElementById('task-input');
+            const backlogColumn = document.getElementById('backlog-column');
+            const trashColumn = document.getElementById('trash-column');  // Колонка Корзина
+            let draggedTask = null; // Храним задачу, которую перетаскивают
+
+            // Добавление новой задачи
+            addTaskBtn.addEventListener('click', function() {
+                const taskName = taskInput.value.trim();
+                if (taskName !== "") {
+                    const newTask = document.createElement('div');
+                    newTask.classList.add('task');
+                    newTask.textContent = taskName;
+                    newTask.draggable = true;  // Задача становится перетаскиваемой
+                    backlogColumn.appendChild(newTask);
+                    taskInput.value = ''; // Очистка поля ввода
+                    addDragAndDropEvents(newTask); // Применяем обработчики для новой задачи
+                }
+            });
+
+            // Добавляем обработчики для существующих задач
+            const tasks = document.querySelectorAll('.task');
+            tasks.forEach(task => {
+                addDragAndDropEvents(task); // Добавляем обработчики событий перетаскивания
+            });
+
+            // Функция для добавления событий drag и drop к элементу задачи
+            function addDragAndDropEvents(task) {
+                // Когда начинается перетаскивание задачи
+                task.addEventListener('dragstart', function() {
+                    draggedTask = task;
+                    setTimeout(() => {
+                        task.style.display = 'none'; // Скрываем задачу, чтобы имитировать перетаскивание
+                    }, 0);
+                });
+
+                // Когда задача перестает перетаскиваться
+                task.addEventListener('dragend', function() {
+                    setTimeout(() => {
+                        draggedTask.style.display = 'block'; // Возвращаем задачу
+                        draggedTask = null; // Сбрасываем значение перетаскиваемой задачи
+                    }, 0);
+                });
+            }
+
+            // Разрешаем сброс задач в любую колонку
+            const columns = document.querySelectorAll('.task-column');
+            columns.forEach(column => {
+                column.addEventListener('dragover', function(event) {
+                    event.preventDefault();  // Нужно для того, чтобы позволить сбрасывать элемент
+                });
+
+                column.addEventListener('drop', function(event) {
+                    event.preventDefault();
+                    if (draggedTask) {
+                        column.appendChild(draggedTask); // Добавляем задачу в колонку
+                    }
+                });
+            });
+
+            // Очистка задач только в колонке "Корзина"
+            clearTasksBtn.addEventListener('click', function() {
+                const tasksInTrash = trashColumn.querySelectorAll('.task');
+                tasksInTrash.forEach(task => task.remove());
+            });
+        });
+    </script>
+</body>
+</html>
