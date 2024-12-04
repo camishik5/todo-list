@@ -1,0 +1,8 @@
+.tasks__item {
+    list-style-type: none;
+    background-color: white;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
